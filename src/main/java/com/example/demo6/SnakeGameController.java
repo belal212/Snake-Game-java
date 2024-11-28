@@ -41,10 +41,12 @@ public class SnakeGameController {
 
 
     private Thread movementThread, inputThread, collisionThread, scoreThread;
+    ScoreManager soloGame = new ScoreManager("Solo_Score.txt");
+    private int highScore= soloGame.loadHighScore();
 
     @FXML
     public void initialize() {
-        foodImage = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\demo6\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png"); // Make sure the path to your image is correct
+        foodImage = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png"); // Make sure the path to your image is correct
 
         initializeGame();
 
@@ -54,6 +56,16 @@ public class SnakeGameController {
         startThreads(gameCanvas.getGraphicsContext2D());
 
         refreshButton.setOnAction(this::reloadAction);
+    }
+
+
+    private void initializeGame() {
+        snake.clear();
+        snake.add(new int[]{GRID_SIZE / 2, GRID_SIZE / 2});
+        placeFood();
+        score = 0;
+        direction = "UP";
+        gameOver = false;
     }
 
 
@@ -70,13 +82,13 @@ public class SnakeGameController {
     }
 
 
-    private void initializeGame() {
-        snake.clear();
-        snake.add(new int[]{GRID_SIZE / 2, GRID_SIZE / 2});
-        placeFood();
-        score = 0;
-        direction = "UP";
-        gameOver = false;
+    private boolean isSnakeCell(int row, int col) {
+        for (int[] segment : snake) {
+            if (segment[0] == row && segment[1] == col) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void placeFood() {
@@ -87,17 +99,10 @@ public class SnakeGameController {
 
         } while (isSnakeCell(row, col));
         food[0] = row;
+        System.out.println(food[0]);
         food[1] = col;
     }
 
-    private boolean isSnakeCell(int row, int col) {
-        for (int[] segment : snake) {
-            if (segment[0] == row && segment[1] == col) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void startThreads(GraphicsContext gc) {
         stopThreads();
@@ -213,6 +218,7 @@ public class SnakeGameController {
 
             gc.setFill(Color.BLACK);
             gc.fillText(STR."Score: \{score}", 10, 20);
+            gc.fillText(STR."High Score: \{highScore}", 10, 40);
         }
 
         if (gameOver) {
@@ -254,24 +260,36 @@ public class SnakeGameController {
     private void checkCollisions() {
         int[] head = snake.getFirst();
 
-        // Wall collision
         if (head[0] < 0 || head[0] >= GRID_SIZE || head[1] < 0 || head[1] >= GRID_SIZE) {
-            System.out.println("Wall collision detected!");
-            gameOver = true;
-            stopThreads();
+            handleGameOver();
             return;
         }
 
-        // Self-collision
         for (int i = 1; i < snake.size(); i++) {
             if (head[0] == snake.get(i)[0] && head[1] == snake.get(i)[1]) {
-                System.out.println("Self-collision detected!");
-                gameOver = true;
-                stopThreads();
+                handleGameOver();
                 return;
             }
         }
     }
+
+    private void handleGameOver() {
+        gameOver = true;
+        stopThreads();
+
+        if (score > highScore) {
+            highScore = score;
+        }
+
+        soloGame.saveScores(score, highScore);
+
+        Platform.runLater(() -> {
+            System.out.println(STR."Game Over! Last Score: \{score}, High Score: \{highScore}");
+            GAMEOVER.setVisible(true);
+            GAMEOVER.toFront();
+        });
+    }
+
 
     private void handleKeyInput(KeyCode key) {
         lock.lock();

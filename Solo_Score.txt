@@ -1,0 +1,2 @@
+LastScore:63
+HighScore:63

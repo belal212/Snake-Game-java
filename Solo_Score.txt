@@ -1,2 +1,2 @@
-LastScore:0
-HighScore:63
+LastScore:4
+HighScore:30

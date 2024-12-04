@@ -1,181 +1,92 @@
 package com.example.demo6;
 
-import javafx.application.Platform;
+import com.example.demo6.threads.CollisionThread;
+import com.example.demo6.threads.InputThread;
+import com.example.demo6.threads.MovementThread;
+import com.example.demo6.threads.ScoreThread;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
+
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-
 public class SnakeGameController {
-
-    private static final int TILE_SIZE = 25;
-    private static final int GRID_SIZE = 20;
-
+    public AnchorPane root;
     @FXML
     private Canvas gameCanvas;
+
     @FXML
     private AnchorPane GAMEOVER;
+
     @FXML
     private Button refreshButton;
 
-    private final Snake snake = new Snake(GRID_SIZE / 2, GRID_SIZE / 2);
-    private final Food food = new Food(GRID_SIZE);
-    private String direction = "UP";
-    private volatile boolean gameOver = false;
-
-    private int score = 0;
-
+    private static final int TILE_SIZE = 25;
+    private static final int GRID_SIZE = 20;
+    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png";
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition directionChanged = lock.newCondition();
-    private boolean directionUpdated = false;
-    private Image foodImage = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png");;
+
+    private final ScoreManager scoreManager = new ScoreManager("Solo_Score.txt");
+
+    private Snake snake;
+    private Food food;
+    private Image foodImage;
     private DrawGame drawGame;
-    private Thread movementThread, inputThread, collisionThread, scoreThread;
-    ScoreManager soloGame = new ScoreManager("Solo_Score.txt");
-    private int highScore= soloGame.loadHighScore();
+    private GameState gameState;
+
+    private ScoreThread scoreThread;
+    private CollisionThread collisionThread;
+    private MovementThread movementThread;
+    private InputThread inputThread;
+
+    private Timeline gameOverChecker;
 
     @FXML
     public void initialize() {
-        initializeGame();
-        gameCanvas.setFocusTraversable(true);
-        gameCanvas.setOnKeyPressed(event -> handleKeyInput(event.getCode()));
-        startThreads(gameCanvas.getGraphicsContext2D());
-        drawGame = new DrawGame(gameCanvas.getGraphicsContext2D(), GRID_SIZE,TILE_SIZE);
-        refreshButton.setOnAction(this::reloadAction);
+        setupGame();
+        setupInputHandling();
+        setupRefreshButton();
+        startGameThreads();
+        startGameOverChecker();
     }
 
-
-    private void initializeGame() {
-        snake.getBody().clear();
-        snake.getBody().add(new int[]{GRID_SIZE / 2, GRID_SIZE / 2});
-        score = 0;
-        direction = "UP";
-        snake.setDirection(direction);
-        gameOver = false;
-    }
-
-
-    public void reloadAction(ActionEvent e){
-        initializeGame();
-
-        gameCanvas.setFocusTraversable(true);
-        gameCanvas.setOnKeyPressed(event -> handleKeyInput(event.getCode()));
-
-        startThreads(gameCanvas.getGraphicsContext2D());
-
+    private void setupGame() {
+        gameState = new GameState(scoreManager);
+        snake = new Snake(GRID_SIZE / 2, GRID_SIZE / 2);
+        food = new Food(GRID_SIZE, snake);
+        foodImage = new Image(FOOD_IMAGE_PATH);
+        drawGame = new DrawGame(gameCanvas.getGraphicsContext2D(), GRID_SIZE, TILE_SIZE);
         GAMEOVER.setVisible(false);
-        GAMEOVER.toBack();
     }
 
-
-    private boolean isSnakeCell(int row, int col) {
-        for (int[] segment : snake.getBody()) {
-            if (segment[0] == row && segment[1] == col) {
-                return true;
-            }
-        }
-        return false;
+    private void setupInputHandling() {
+        gameCanvas.setFocusTraversable(true);
+        gameCanvas.setOnKeyPressed(event -> inputThread.setPendingKey(event.getCode()));
     }
 
+    private void setupRefreshButton() {
+        refreshButton.setOnAction(this::onRefreshButtonClick);
+    }
 
+    private void onRefreshButtonClick(ActionEvent event) {
+        initialize();
+    }
 
+    private void startGameThreads() {
+        stopGameThreads();
 
-    private void startThreads(GraphicsContext gc) {
-        stopThreads();
-
-        movementThread = new Thread(() -> {
-            while (!gameOver) {
-                lock.lock();
-                try {
-                    snake.move(false);
-                    Platform.runLater(() -> {
-                        drawGame.drawGrid();
-                        drawGame.drawSnake(snake,gameOver);
-                        drawGame.drawFood(food,foodImage,gameOver);
-                        drawGame.drawScore(score,highScore,gameOver);
-
-                    });
-                } finally {
-                    lock.unlock();
-                }
-                try {
-                    Thread.sleep(110);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
-
-
-        inputThread = new Thread(() -> {
-            while (!gameOver) {
-                lock.lock();
-                try {
-                    while (!directionUpdated) {
-                        directionChanged.await();
-                    }
-                    directionUpdated = false;
-                } catch (InterruptedException e) {
-                    break;
-                } finally {
-                    lock.unlock();
-                }
-            }
-        });
-
-
-        collisionThread = new Thread(() -> {
-            while (!gameOver) {
-                lock.lock();
-                try {
-                    checkCollisions();
-                    if (gameOver) {
-                        Platform.runLater(() -> {
-                            System.out.println("Game Over triggered by collision thread!");
-                            GAMEOVER.setVisible(true);
-                            GAMEOVER.toFront();
-                        });
-                    }
-                } finally {
-                    lock.unlock();
-                }
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    System.out.println("Collision thread interrupted.");
-                    break;
-                }
-            }
-            System.out.println("Collision thread terminated.");
-        });
-
-
-        scoreThread = new Thread(() -> {
-            while (!gameOver) {
-                lock.lock();
-                try {
-                    if (snake.getBody().getFirst()[0] == food.getPosition()[0] && snake.getBody().getFirst()[1] == food.getPosition()[1]) {
-                        score += 1;
-                        food.placeFood(snake);
-                        snake.move(true);
-                    }
-                } finally {
-                    lock.unlock();
-                }
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
+        movementThread = new MovementThread(lock, drawGame, snake, food, foodImage, gameState);
+        inputThread = new InputThread(lock, directionChanged, snake, gameState);
+        collisionThread = new CollisionThread(lock, snake, gameState, GRID_SIZE);
+        scoreThread = new ScoreThread(lock, snake, food, drawGame, gameState);
 
         movementThread.start();
         inputThread.start();
@@ -183,81 +94,26 @@ public class SnakeGameController {
         scoreThread.start();
     }
 
+    private void startGameOverChecker() {
+        gameOverChecker = new Timeline(new KeyFrame(Duration.millis(50), event -> checkGameOver()));
+        gameOverChecker.setCycleCount(Timeline.INDEFINITE);
+        gameOverChecker.play();
+    }
 
-    private void stopThreads() {
-        System.out.println("Stopping threads...");
+    private void stopGameThreads() {
         if (movementThread != null) movementThread.interrupt();
         if (inputThread != null) inputThread.interrupt();
         if (collisionThread != null) collisionThread.interrupt();
         if (scoreThread != null) scoreThread.interrupt();
     }
 
-
-
-    private void checkCollisions() {
-        int[] head = snake.getBody().getFirst();
-
-        if (head[0] < 0 || head[0] >= GRID_SIZE || head[1] < 0 || head[1] >= GRID_SIZE) {
-            handleGameOver();
-            return;
-        }
-
-        for (int i = 1; i < snake.getBody().size(); i++) {
-            if (head[0] == snake.getBody().get(i)[0] && head[1] == snake.getBody().get(i)[1]) {
-                handleGameOver();
-                return;
-            }
-        }
-    }
-
-    private void handleGameOver() {
-        gameOver = true;
-        stopThreads();
-
-        if (score > highScore) {
-            highScore = score;
-        }
-
-        soloGame.saveScores(score, highScore);
-
-        Platform.runLater(() -> {
-            System.out.println(STR."Game Over! Last Score: \{score}, High Score: \{highScore}");
-            GAMEOVER.setVisible(true);
-            GAMEOVER.toFront();
-        });
-    }
-
-
-    private void handleKeyInput(KeyCode key) {
-        lock.lock();
-        try {
-            switch (key) {
-                case UP -> {
-                    if (!direction.equals("DOWN")) direction = "UP";
-                    snake.setDirection(direction);
-
-                }
-                case DOWN -> {
-                    if (!direction.equals("UP")) direction = "DOWN";
-                    snake.setDirection(direction);
-                }
-                case LEFT -> {
-                    if (!direction.equals("RIGHT")) direction = "LEFT";
-                    snake.setDirection(direction);
-                }
-                case RIGHT -> {
-                    if (!direction.equals("LEFT")) direction = "RIGHT";
-                    snake.setDirection(direction);
-                }
-
-                case R -> reloadAction(null);
-
-                case ESCAPE -> Platform.exit();
-            }
-            directionUpdated = true;
-            directionChanged.signal();
-        } finally {
-            lock.unlock();
+    private void checkGameOver() {
+        if (gameState.isGameOver()) {
+            stopGameThreads();
+            gameState.updateHighScore();
+            drawGame.drawGameOver(GAMEOVER, true);
+            scoreManager.saveScores(gameState.getScore(), gameState.getHighScore());
+            gameOverChecker.stop();
         }
     }
 }

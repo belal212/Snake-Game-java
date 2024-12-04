@@ -7,9 +7,7 @@ import java.nio.file.Paths;
 public class ScoreManager {
 
     private final String SCORE_FILE ;
-    public ScoreManager(String SCORE_FILE){
-        this.SCORE_FILE = SCORE_FILE;
-    }
+    public ScoreManager(String SCORE_FILE){this.SCORE_FILE = SCORE_FILE;}
 
     public void saveScores(int lastScore, int highScore) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SCORE_FILE))) {
@@ -30,13 +28,10 @@ public class ScoreManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(SCORE_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("HighScore:")) {
-                    return Integer.parseInt(line.split(":")[1]);
-                }
+                if (line.startsWith("HighScore:")) return Integer.parseInt(line.split(":")[1]);
             }
-        } catch (IOException e) {
-            System.out.println("error in get high score");
         }
+        catch (IOException e) {System.out.println("error in get high score");}
 
         return 0;
     }

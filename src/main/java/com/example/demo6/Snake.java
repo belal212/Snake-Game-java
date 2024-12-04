@@ -25,7 +25,6 @@ public class Snake {
     public void move(boolean grow) {
         int[] head = body.getFirst();
         int[] newHead = {head[0], head[1]};
-
         switch (direction) {
             case "UP" -> newHead[0]--;
             case "DOWN" -> newHead[0]++;

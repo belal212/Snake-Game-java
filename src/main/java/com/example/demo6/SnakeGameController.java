@@ -221,7 +221,7 @@ public class SnakeGameController {
         soloGame.saveScores(score, highScore);
 
         Platform.runLater(() -> {
-            System.out.println(STR."Game Over! Last Score: \{score}, High Score: \{highScore}");
+            System.out.println("Game Over! Last Score: " +score+" High Score: "+highScore);
             GAMEOVER.setVisible(true);
             GAMEOVER.toFront();
         });

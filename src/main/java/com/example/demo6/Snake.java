@@ -1,6 +1,8 @@
 package com.example.demo6;
 
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Stack;
 
 public class Snake {
     private final LinkedList<int[]> body = new LinkedList<>();

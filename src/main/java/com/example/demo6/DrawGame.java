@@ -43,8 +43,8 @@ public class DrawGame {
     public void drawScore(int score, int highScore, boolean gameOver){
         if (!gameOver){
             gc.setFill(Color.BLACK);
-            gc.fillText(STR."Score: \{score}", 10, 20);
-            gc.fillText(STR."High Score: \{highScore}", 10, 40);
+            gc.fillText("Score: "+score, 10, 20);
+            gc.fillText("High Score: "+highScore, 10, 40);
         }
     }
 

@@ -8,6 +8,9 @@ public class Snake {
 
     public Snake(int startRow, int startCol) {
         body.add(new int[]{startRow, startCol});
+        body.add(new int[]{startRow++, startCol++});
+        body.add(new int[]{startRow+2, startCol+2});
+        body.add(new int[]{startRow+3, startCol+3});
     }
 
     public LinkedList<int[]> getBody() {
@@ -48,5 +51,77 @@ public class Snake {
             }
         }
         return false;
+    }
+
+    // Helper Method: Get the direction of the tail
+    public String getTailDirection() {
+        int[] tail = body.getLast();
+        int[] beforeTail = body.get(body.size() - 2);
+
+        if (beforeTail[0] == tail[0]) {
+            return beforeTail[1] < tail[1] ? "RIGHT" : "LEFT";
+        } else {
+            return beforeTail[0] < tail[0] ? "DOWN" : "UP";
+        }
+    }
+
+    // Helper Method: Check if the segment is horizontal
+    public boolean isHorizontal(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return prev[0] == segment[0] && next[0] == segment[0];
+    }
+
+    // Helper Method: Check if the segment is vertical
+    public boolean isVertical(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return prev[1] == segment[1] && next[1] == segment[1];
+    }
+
+    // Helper Method: Check if the segment is turning top-left
+    public boolean isTurningTopLeft(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return (prev[0] > segment[0] && next[1] > segment[1]) || (prev[1] > segment[1] && next[0] > segment[0]);
+    }
+
+    // Helper Method: Check if the segment is turning top-right
+    public boolean isTurningTopRight(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return (prev[0] > segment[0] && next[1] < segment[1]) || (prev[1] < segment[1] && next[0] > segment[0]);
+    }
+
+    // Helper Method: Check if the segment is turning bottom-left
+    public boolean isTurningBottomLeft(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return (prev[0] < segment[0] && next[1] > segment[1]) || (prev[1] > segment[1] && next[0] < segment[0]);
+    }
+
+    // Helper Method: Check if the segment is turning bottom-right
+    public boolean isTurningBottomRight(int[] segment) {
+        int index = body.indexOf(segment);
+        if (index <= 0 || index >= body.size() - 1) return false;
+        int[] prev = body.get(index - 1);
+        int[] next = body.get(index + 1);
+
+        return (prev[0] < segment[0] && next[1] < segment[1]) || (prev[1] < segment[1] && next[0] < segment[0]);
     }
 }

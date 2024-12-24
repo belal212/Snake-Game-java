@@ -28,9 +28,9 @@ public class SnakeGameController {
     @FXML
     private Button refreshButton;
 
-    private static final int TILE_SIZE = 25;
+    private static final int TILE_SIZE = 70;
     private static final int GRID_SIZE = 20;
-    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png";
+    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\apple.png";
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition directionChanged = lock.newCondition();
 

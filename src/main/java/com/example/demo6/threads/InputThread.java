@@ -15,7 +15,7 @@ public class InputThread extends Thread {
     private final Snake snake;
     private final GameState gameState;
     private final Queue<KeyCode> inputQueue = new LinkedList<>();
-    private long lastKeyPressTime = 0; // To handle rapid key presses
+    private long lastKeyPressTime = 2; // To handle rapid key presses
 
     public InputThread(Lock lock, Condition directionChanged, Snake snake, GameState gameState) {
         this.lock = lock;
@@ -69,7 +69,7 @@ public class InputThread extends Thread {
 
     public void handleKeyInput(KeyCode key) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastKeyPressTime < 100) { // Ignore inputs within 100ms
+        if (currentTime - lastKeyPressTime < 1) { // Ignore inputs within 100ms
             return;
         }
         lastKeyPressTime = currentTime;

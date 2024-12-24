@@ -22,6 +22,7 @@ public class DrawGame {
 
     // Draw the game grid (checkerboard pattern)
     public void drawGrid() {
+        int largerTileSize = TILE_SIZE * 2;
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
                 if ((row + col) % 2 == 0) {
@@ -34,76 +35,116 @@ public class DrawGame {
         }
     }
 
-    // Draw the snake with shadow, gradient, and styled eyes
+
+    // Load images
+    private Image headUp = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_up.png");
+    private Image headDown = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_down.png");
+    private Image headLeft = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_left.png");
+    private Image headRight = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_right.png");
+
+    private Image bodyHorizontal = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_horizontal.png");
+    private Image bodyVertical = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_vertical.png");
+    private Image bodyTopLeft = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_topleft.png");
+    private Image bodyTopRight = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_topright.png");
+    private Image bodyBottomLeft = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_bottomleft.png");
+    private Image bodyBottomRight = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_bottomright.png");
+
+    private Image tailUp = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_up.png");
+    private Image tailDown = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_down.png");
+    private Image tailLeft = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_left.png");
+    private Image tailRight = new Image("file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_right.png");
+
+
+    // Method to draw the snake
     public void drawSnake(Snake snake) {
         synchronized (snake.getBody()) {
-            int bodySize = snake.getBody().size();
-
-            for (int i = 0; i < bodySize; i++) {
+            for (int i = 0; i < snake.getBody().size(); i++) {
                 int[] segment = snake.getBody().get(i);
                 double x = segment[1] * TILE_SIZE;
                 double y = segment[0] * TILE_SIZE;
 
-                // Draw shadow for the segment
-                graphicsContext.setFill(Color.rgb(0, 0, 0, 0.3)); // Semi-transparent black
-                graphicsContext.fillRect(x + 2, y + 2, TILE_SIZE, TILE_SIZE);
+                if (i == 0) { // Head
+                    switch (snake.getDirection()) {
+                        case "UP" -> graphicsContext.drawImage(headUp, x, y, TILE_SIZE, TILE_SIZE);
+                        case "DOWN" -> graphicsContext.drawImage(headDown, x, y, TILE_SIZE, TILE_SIZE);
+                        case "LEFT" -> graphicsContext.drawImage(headLeft, x, y, TILE_SIZE, TILE_SIZE);
+                        case "RIGHT" -> graphicsContext.drawImage(headRight, x, y, TILE_SIZE, TILE_SIZE);
+                    }
+                } else if (i == snake.getBody().size() - 1) { // Tail
+                    switch (snake.getTailDirection()) {
+                        case "UP" -> graphicsContext.drawImage(tailUp, x, y, TILE_SIZE, TILE_SIZE);
+                        case "DOWN" -> graphicsContext.drawImage(tailDown, x, y, TILE_SIZE, TILE_SIZE);
+                        case "LEFT" -> graphicsContext.drawImage(tailLeft, x, y, TILE_SIZE, TILE_SIZE);
+                        case "RIGHT" -> graphicsContext.drawImage(tailRight, x, y, TILE_SIZE, TILE_SIZE);
+                    }
+                } else { // Body
+                    int[] prev = snake.getBody().get(i - 1);
+                    int[] next = snake.getBody().get(i + 1);
 
-                // Create gradient effect for the snake body
-                double ratio = (double) i / bodySize;
-                LinearGradient gradient = new LinearGradient(
-                        0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
-                        new Stop(0, Color.rgb(33, 111, 213)), // Replace with Colors.SNAKE1
-                        new Stop(1, Color.rgb(84, 121, 169))  // Replace with Colors.SNAKE2
-                );
-
-                graphicsContext.setFill(gradient);
-
-                // Adjust segment size for the head and tail
-                double segmentWidth = TILE_SIZE;
-                double segmentHeight = TILE_SIZE;
-
-                if (i == 0) { // Head (slightly larger)
-                    segmentWidth = TILE_SIZE * 1.1;
-                    segmentHeight = TILE_SIZE * 1.1;
-                } else if (i == bodySize - 1) { // Tail (slightly smaller)
-                    segmentWidth = TILE_SIZE * 0.9;
-                    segmentHeight = TILE_SIZE * 0.9;
-                }
-
-                // Draw the snake segment
-                graphicsContext.fillRoundRect(x, y, segmentWidth, segmentHeight, TILE_SIZE * 0.3, TILE_SIZE * 0.3);
-
-                // Draw eyes on the head
-                if (i == 0) {
-                    drawEyes(x, y, segmentWidth, segmentHeight);
+                    if (prev[0] == segment[0] && next[0] == segment[0]) { // Horizontal
+                        graphicsContext.drawImage(bodyHorizontal, x, y, TILE_SIZE, TILE_SIZE);
+                    } else if (prev[1] == segment[1] && next[1] == segment[1]) { // Vertical
+                        graphicsContext.drawImage(bodyVertical, x, y, TILE_SIZE, TILE_SIZE);
+                    } else if ((prev[0] < segment[0] && next[1] > segment[1]) || (prev[1] > segment[1] && next[0] < segment[0])) { // Top-left corner
+                        graphicsContext.drawImage(bodyTopRight, x, y, TILE_SIZE, TILE_SIZE);
+                    } else if ((prev[0] < segment[0] && next[1] < segment[1]) || (prev[1] < segment[1] && next[0] < segment[0])) { // Top-right corner
+                        graphicsContext.drawImage(bodyTopLeft, x, y, TILE_SIZE, TILE_SIZE);
+                    } else if ((prev[0] > segment[0] && next[1] > segment[1]) || (prev[1] > segment[1] && next[0] > segment[0])) { // Bottom-left corner
+                        graphicsContext.drawImage(bodyBottomRight, x, y, TILE_SIZE, TILE_SIZE);
+                    } else if ((prev[0] > segment[0] && next[1] < segment[1]) || (prev[1] < segment[1] && next[0] > segment[0])) { // Bottom-right corner
+                        graphicsContext.drawImage(bodyBottomLeft, x, y, TILE_SIZE, TILE_SIZE);
+                    }
                 }
             }
         }
     }
 
-    // Draw the snake's eyes
+
+
+    // Function to draw the snake's cartoon-style eyes
     private void drawEyes(double x, double y, double segmentWidth, double segmentHeight) {
-        double eyeSize = TILE_SIZE * 0.2;
-        double eyeOffsetX = TILE_SIZE * 0.25;
-        double eyeOffsetY = TILE_SIZE * 0.35;
+        // Adjust as needed for your style
+        double eyeSize    = TILE_SIZE * 0.3;
+        double pupilSize  = TILE_SIZE * 0.15;
+        double eyeOffsetX = segmentWidth * 0.2;
+        double eyeOffsetY = segmentHeight * 0.25;
 
-        // Draw white eye backgrounds
+        // Draw the white part of the eyes
         graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillOval(x + eyeOffsetX, y + eyeOffsetY, eyeSize, eyeSize);
-        graphicsContext.fillOval(x + segmentWidth - eyeOffsetX - eyeSize, y + eyeOffsetY, eyeSize, eyeSize);
+        // Left eye
+        graphicsContext.fillOval(x + eyeOffsetX,
+                y + eyeOffsetY,
+                eyeSize, eyeSize);
+        // Right eye
+        graphicsContext.fillOval(x + segmentWidth - eyeOffsetX - eyeSize,
+                y + eyeOffsetY,
+                eyeSize, eyeSize);
 
-        // Draw black pupils
-        double pupilSize = eyeSize * 0.5;
+        // Draw the pupils
         graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillOval(x + eyeOffsetX + pupilSize * 0.5, y + eyeOffsetY + pupilSize * 0.5, pupilSize, pupilSize);
-        graphicsContext.fillOval(x + segmentWidth - eyeOffsetX - eyeSize + pupilSize * 0.5, y + eyeOffsetY + pupilSize * 0.5, pupilSize, pupilSize);
-
-        // Draw reflections in the eyes
-        double reflectSize = pupilSize * 0.4;
-        graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillOval(x + eyeOffsetX + pupilSize * 0.7, y + eyeOffsetY + pupilSize * 0.7, reflectSize, reflectSize);
-        graphicsContext.fillOval(x + segmentWidth - eyeOffsetX - eyeSize + pupilSize * 0.7, y + eyeOffsetY + pupilSize * 0.7, reflectSize, reflectSize);
+        // Left pupil
+        graphicsContext.fillOval(x + eyeOffsetX + eyeSize * 0.3,
+                y + eyeOffsetY + eyeSize * 0.3,
+                pupilSize, pupilSize);
+        // Right pupil
+        graphicsContext.fillOval(x + segmentWidth - eyeOffsetX - eyeSize + eyeSize * 0.3,
+                y + eyeOffsetY + eyeSize * 0.3,
+                pupilSize, pupilSize);
     }
+
+    // Optional function to draw a tiny tongue
+    private void drawTongue(double x, double y, double segmentWidth, double segmentHeight) {
+        double tongueWidth  = segmentWidth * 0.05;
+        double tongueHeight = segmentHeight * 0.25;
+
+        // Place the tongue near the bottom center of the head
+        double tongueX = x + (segmentWidth / 2) - (tongueWidth / 2);
+        double tongueY = y + segmentHeight - (tongueHeight * 0.15);
+
+        graphicsContext.setFill(Color.RED);
+        graphicsContext.fillRect(tongueX, tongueY, tongueWidth, tongueHeight);
+    }
+
     // Draw the food image on the canvas
     public void drawFood(Food food, Image foodImage, boolean gameOver) {
         if (!gameOver) {

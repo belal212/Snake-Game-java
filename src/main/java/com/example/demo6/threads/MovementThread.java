@@ -13,7 +13,7 @@ public class MovementThread extends Thread {
     private final Snake snake;
     private final Image foodImage;
     private final GameState gameState;
-    private int speed = 140;
+    private int speed = 100;
     private int lastSpeedMilestone = 0;
 
     public MovementThread(Lock lock, DrawGame drawGame, Snake snake, Food food, Image foodImage, GameState gameState) {

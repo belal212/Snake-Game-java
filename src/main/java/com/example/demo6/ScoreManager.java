@@ -11,9 +11,9 @@ public class ScoreManager {
 
     public void saveScores(int lastScore, int highScore) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SCORE_FILE))) {
-            writer.write(STR."LastScore:\{lastScore}");
+            writer.write("LastScore:"+lastScore);
             writer.newLine();
-            writer.write(STR."HighScore:\{highScore}");
+            writer.write("HighScore:"+highScore);
         } catch (IOException e) {
             System.out.println("Error in Writing Score");
         }

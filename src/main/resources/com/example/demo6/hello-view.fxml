@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo6.SnakeGameController">
-   <Canvas fx:id="gameCanvas" height="500.0" width="500.0" />
+   <Canvas fx:id="gameCanvas" height="600.0" width="600.0" />
    <AnchorPane fx:id="GAMEOVER" layoutX="73.0" layoutY="119.0" prefHeight="262.0" prefWidth="354.0" style="-fx-background-color: rgba(255, 25, 25, 0.7); -fx-background-radius: 35;" visible="false">
       <Label layoutX="83.0" layoutY="42.0" text="Game Over!" textFill="WHITE">
          <font>
@@ -19,7 +19,7 @@
       <Button fx:id="refreshButton" layoutX="154.0" layoutY="207.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="46.0" style="-fx-background-color: GREY; -fx-background-radius: 50;">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@refresh-page-option.png"/>
+               <Image url="@refresh-page-option.png" />
             </ImageView>
          </graphic>
          <cursor>

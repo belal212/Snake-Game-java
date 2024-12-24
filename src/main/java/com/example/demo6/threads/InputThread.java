@@ -69,7 +69,7 @@ public class InputThread extends Thread {
 
     public void handleKeyInput(KeyCode key) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastKeyPressTime < 1) { // Ignore inputs within 100ms
+        if (currentTime - lastKeyPressTime < 10) { // Ignore inputs within 100ms
             return;
         }
         lastKeyPressTime = currentTime;

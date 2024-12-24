@@ -28,9 +28,9 @@ public class SnakeGameController {
     @FXML
     private Button refreshButton;
 
-    private static final int TILE_SIZE = 70;
-    private static final int GRID_SIZE = 20;
-    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\ahmed\\UNI\\Projects\\Java\\Java Projects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\apple.png";
+    private static final int TILE_SIZE = 40;
+    private static final int GRID_SIZE = 15;
+    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png";
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition directionChanged = lock.newCondition();
 
@@ -89,6 +89,13 @@ public class SnakeGameController {
         inputThread = new InputThread(lock, directionChanged, snake, gameState);
         collisionThread = new CollisionThread(lock, snake, gameState, GRID_SIZE);
         scoreThread = new ScoreThread(lock, snake, food, drawGame, gameState);
+
+        try {
+            inputThread.join();
+            movementThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         movementThread.start();
         inputThread.start();

@@ -13,7 +13,7 @@ public class MovementThread extends Thread {
     private final Snake snake;
     private final Image foodImage;
     private final GameState gameState;
-    private int speed = 100;
+    private int speed = 110;
     private int lastSpeedMilestone = 0;
 
     public MovementThread(Lock lock, DrawGame drawGame, Snake snake, Food food, Image foodImage, GameState gameState) {
@@ -25,6 +25,8 @@ public class MovementThread extends Thread {
         this.gameState = gameState;
     }
 
+
+    //Game Loop
     @Override
     public void run() {
         while (!gameState.isGameOver()) {
@@ -52,7 +54,7 @@ public class MovementThread extends Thread {
         int currentMilestone = gameState.getScore() / 10;
         if (currentMilestone > lastSpeedMilestone && speed > 50) {
             lastSpeedMilestone = currentMilestone;
-            speed -= 5;
+            speed -= 10;
         }
     }
 

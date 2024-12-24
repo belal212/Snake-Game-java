@@ -2,6 +2,7 @@ module com.example.demo6 {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires jlayer;
 
 
     opens com.example.demo6 to javafx.fxml;

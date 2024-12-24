@@ -36,6 +36,7 @@ public class SnakeGameController {
 
     private final ScoreManager scoreManager = new ScoreManager("Solo_Score.txt");
 
+
     private Snake snake;
     private Food food;
     private Image foodImage;
@@ -61,6 +62,7 @@ public class SnakeGameController {
     private void setupGame() {
         gameState = new GameState(scoreManager);
         snake = new Snake(GRID_SIZE / 2, GRID_SIZE / 2);
+
         food = new Food(GRID_SIZE, snake);
         foodImage = new Image(FOOD_IMAGE_PATH);
         drawGame = new DrawGame(gameCanvas.getGraphicsContext2D(), GRID_SIZE, TILE_SIZE);

@@ -10,7 +10,7 @@ public class CollisionThread extends Thread{
     private final Lock lock;
     private final Snake snake;
     private final int GRID_SIZE;
-    private AudioPlayer audioPlayer = new AudioPlayer("C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\ahh.mp3");
+    private AudioPlayer audioPlayer = new AudioPlayer("C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\soundEffect\\collisionpad.wav");
 
     public CollisionThread(Lock lock, Snake snake, GameState GameState, int GRID_SIZE) {
         this.lock = lock;

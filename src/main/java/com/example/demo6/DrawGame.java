@@ -37,23 +37,22 @@ public class DrawGame {
 
 
     // Load images
-    private Image headUp = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_up.png");
-    private Image headDown = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_down.png");
-    private Image headLeft = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_left.png");
-    private Image headRight = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\head_right.png");
+    private Image headUp = new Image("file:src/main/resources/com/example/demo6/image/head_up.png");
+    private Image headDown = new Image("file:src/main/resources/com/example/demo6/image/head_down.png");
+    private Image headLeft = new Image("file:src/main/resources/com/example/demo6/image/head_left.png");
+    private Image headRight = new Image("file:src/main/resources/com/example/demo6/image/head_right.png");
 
-    private Image bodyHorizontal = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_horizontal.png");
-    private Image bodyVertical = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_vertical.png");
-    private Image bodyTopLeft = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_topleft.png");
-    private Image bodyTopRight = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_topright.png");
-    private Image bodyBottomLeft = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_bottomleft.png");
-    private Image bodyBottomRight = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\body_bottomright.png");
+    private Image bodyHorizontal = new Image("file:src/main/resources/com/example/demo6/image/body_horizontal.png");
+    private Image bodyVertical = new Image("file:src/main/resources/com/example/demo6/image/body_vertical.png");
+    private Image bodyTopLeft = new Image("file:src/main/resources/com/example/demo6/image/body_topleft.png");
+    private Image bodyTopRight = new Image("file:src/main/resources/com/example/demo6/image/body_topright.png");
+    private Image bodyBottomLeft = new Image("file:src/main/resources/com/example/demo6/image/body_bottomleft.png");
+    private Image bodyBottomRight = new Image("file:src/main/resources/com/example/demo6/image/body_bottomright.png");
 
-    private Image tailUp = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_up.png");
-    private Image tailDown = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_down.png");
-    private Image tailLeft = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_left.png");
-    private Image tailRight = new Image("file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\java\\com\\example\\demo6\\tail_right.png");
-
+    private Image tailUp = new Image("file:src/main/resources/com/example/demo6/image/tail_up.png");
+    private Image tailDown = new Image("file:src/main/resources/com/example/demo6/image/tail_down.png");
+    private Image tailLeft = new Image("file:src/main/resources/com/example/demo6/image/tail_left.png");
+    private Image tailRight = new Image("file:src/main/resources/com/example/demo6/image/tail_right.png");
 
     // Method to draw the snake
     public void drawSnake(Snake snake) {

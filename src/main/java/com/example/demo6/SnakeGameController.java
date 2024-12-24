@@ -30,7 +30,7 @@ public class SnakeGameController {
 
     private static final int TILE_SIZE = 40;
     private static final int GRID_SIZE = 15;
-    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\pngkey.com-cute-pineapple-png-4078126.png";
+    private static final String FOOD_IMAGE_PATH = "file:C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\image\\pngkey.com-cute-pineapple-png-4078126.png";
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition directionChanged = lock.newCondition();
 

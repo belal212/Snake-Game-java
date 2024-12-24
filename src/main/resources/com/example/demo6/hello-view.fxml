@@ -19,7 +19,7 @@
       <Button fx:id="refreshButton" layoutX="154.0" layoutY="207.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="46.0" style="-fx-background-color: GREY; -fx-background-radius: 50;">
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@refresh-page-option.png" />
+               <Image url="@image/refresh-page-option.png" />
             </ImageView>
          </graphic>
          <cursor>

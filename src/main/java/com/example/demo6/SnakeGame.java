@@ -163,24 +163,28 @@ class GamePanel extends JPanel implements ActionListener {
     private class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()) {
+            switch(e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (direction != 'R') {
+                case KeyEvent.VK_A:    // Add A key
+                    if(direction != 'R') {
                         direction = 'L';
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (direction != 'L') {
+                case KeyEvent.VK_D:    // Add D key
+                    if(direction != 'L') {
                         direction = 'R';
                     }
                     break;
                 case KeyEvent.VK_UP:
-                    if (direction != 'D') {
+                case KeyEvent.VK_W:    // Add W key
+                    if(direction != 'D') {
                         direction = 'U';
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (direction != 'U') {
+                case KeyEvent.VK_S:    // Add S key
+                    if(direction != 'U') {
                         direction = 'D';
                     }
                     break;

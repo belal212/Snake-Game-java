@@ -35,4 +35,20 @@ public class ScoreManager {
 
         return 0;
     }
+    public int loadLastScore() {
+        if (!Files.exists(Paths.get(SCORE_FILE))) {
+            System.out.println("Where is the File to Load?");
+            return 0;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(SCORE_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("LastScore:")) return Integer.parseInt(line.split(":")[1]);
+            }
+        }
+        catch (IOException e) {System.out.println("error in get last score");}
+
+        return 0;
+    }
 }

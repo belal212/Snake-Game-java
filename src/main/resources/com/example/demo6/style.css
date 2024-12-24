@@ -1,0 +1,11 @@
+.Buttons{
+    -fx-background-color:rgb(35, 77, 145);
+    -fx-background-radius: 35;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe Script";
+    -fx-font-weight: bold;
+    -fx-font-size: 17;
+}
+.Buttons:hover{
+    -fx-background-color: rgb(84, 143, 240);
+}

@@ -11,7 +11,7 @@ public class ScoreThread extends Thread {
     private final Food food;
     private final DrawGame drawGame;
     private final GameState gameState;
-    private AudioPlayer audioPlayer = new AudioPlayer("C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\eating-sound-effect-36186.mp3");
+    private AudioPlayer audioPlayer = new AudioPlayer("C:\\Users\\Lenovo\\IdeaProjects\\Snake-Game-java\\src\\main\\resources\\com\\example\\demo6\\soundEffect\\eating-sound-effect-36186.mp3");
 
     public ScoreThread(Lock lock, Snake snake, Food food, DrawGame drawGame, GameState gameState) {
         this.lock = lock;

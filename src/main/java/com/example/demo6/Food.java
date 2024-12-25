@@ -10,6 +10,9 @@ public class Food {
         this.GRID_SIZE = GRID_SIZE;
         placeFood(snake); // Ensure food is placed at a random position during initialization
     }
+    public Food(int GRID_SIZE) {
+        this.GRID_SIZE = GRID_SIZE;
+    }
 
     public int[] getPosition() {
         return position;

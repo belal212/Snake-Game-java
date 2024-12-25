@@ -4,6 +4,9 @@ public class GameState {
     private volatile boolean gameOver = false;
     private int score = 0;
     private int highScore;
+    public GameState(){
+
+    }
     public GameState(ScoreManager scoreManager){
         highScore = scoreManager.loadHighScore();
     }

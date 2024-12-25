@@ -1,5 +1,7 @@
 package com.example.demo6;
 
+import com.example.demo6.lvls.LVL;
+import com.example.demo6.obstacles.StaticObstacle;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -9,8 +11,10 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 
+import java.util.List;
+
 public class DrawGame {
-    private final GraphicsContext graphicsContext;
+    public  GraphicsContext graphicsContext;
     private final int GRID_SIZE;
     private final int TILE_SIZE;
 
@@ -32,6 +36,12 @@ public class DrawGame {
                 }
                 graphicsContext.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
+        }
+
+        LVL lvl1 = new LVL();
+        lvl1.Obstacles(TILE_SIZE);
+        for (int i = 0; i < lvl1.getStaticObstacles().size(); i++){
+            lvl1.getStaticObstacles().get(i).render(graphicsContext);
         }
     }
 
